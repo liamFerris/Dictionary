@@ -28,7 +28,7 @@ public class Word {
     }
 
     public Word addToWordDefinedByThis(Word word) {
-        if (!wordsDefinedByThis.contains(word)) {
+        if (!wordsDefinedByThis.contains(word) && !this.equals(word)) {
             wordsDefinedByThis.add(word);
         }
         return this;
@@ -55,7 +55,7 @@ public class Word {
     }
 
     public void addToDefinitionWords(Word word) {
-        if (!definitionWords.contains(word)) {
+        if (!definitionWords.contains(word) && !this.equals(word)) {
             definitionWords.add(word);
         }
     }
@@ -69,7 +69,4 @@ public class Word {
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
     }
-
-
-
 }

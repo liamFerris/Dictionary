@@ -40,10 +40,8 @@ public class Application {
         try {
             PreparedStatement prep = conn.prepareStatement("Select * from entries");
             ResultSet resultSet = prep.executeQuery();
-
             char first = '0';
             while (resultSet.next()) {
-
                 String name = Word.sanitiseWord(resultSet.getString(1));
                 String definition = resultSet.getString(3);
                 if (initialHashMap.get(name) == null) {
@@ -103,7 +101,6 @@ public class Application {
     }
 
     public static void addCollectionToDb(Connection conn, String table, ArrayList<Word> collection) {
-
         try {
             PreparedStatement p = conn.prepareStatement("drop table " + table);
             p.executeUpdate();
