@@ -1,5 +1,3 @@
-
-
 import java.sql.*;
 import java.util.*;
 import java.util.Arrays;
@@ -26,10 +24,10 @@ public class Application {
         int count = removeDerivatives();
 
         System.out.println("Reduced from " + count + " to " + initialCollection.size());
-        addCollectionToDb(conn, "setOfWordsUsedToDefine", initialCollection);
+        //addCollectionToDb(conn, "setOfWordsUsedToDefine", initialCollection);
 
         System.out.println("Finding top words");
-        sortByImportantWords(true);
+        sortByImportantWordsMethodTwo(true, 1);
 
         System.out.println("Reduced from " + count + " to " + importantWords.size());
         addCollectionToDb(conn, "importantWords", importantWords);
@@ -150,5 +148,42 @@ public class Application {
                 System.out.println(i + ": { " + top.getName() + " } { " + top.timesUsedWeight() + " } { " + topWord + " }");
             }
         } while (initialCollection.size() != 0);
+    }
+
+    public static void sortByImportantWordsMethodTwo(boolean consoleOutput, int count) {
+
+        while (initialCollection.size() > 0) {
+            HashMap<Long, Word> words = new HashMap<>();
+            long highest = 0;
+            for (Word w : initialCollection) {
+                long g = w.getDefinitionWordsSum();
+                if (g > highest) {
+                    highest = g;
+                }
+                words.put(g, w);
+            }
+
+            ArrayList<Word> iw = new ArrayList<>();
+            int numberTaken = 0;
+            for (long i = highest; i > 0; i--) {
+                Word w = words.get(i);
+                if (w != null) {
+                    if (i + numberTaken <= highest) {
+                        numberTaken += w.timesUsedWeight();
+                        highest = i;
+                        iw.add(w);
+                        if (consoleOutput) {
+                            System.out.println(count + " : { " + w.getName() + " } { " + w.timesUsedWeight() + " } { " + i + " }");
+                        }
+                        count++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            importantWords.addAll(iw);
+            initialCollection.removeAll(iw);
+            iw.forEach(j -> j.setFinalWord(true));
+        }
     }
 }
